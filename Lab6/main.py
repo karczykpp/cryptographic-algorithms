@@ -50,16 +50,15 @@ print("PAGERANK")
 q = 0.15
 n = 10
 
-pr = np.ones([10], dtype=float) / 10
+pr = np.zeros([10], dtype=float)
 
 for _ in range(ITERATIONS):
     new_pr = np.zeros([10], dtype=float)
     for i in range(n):
-        suma = 0.0
         for j in range(n):
-            suma += M[i][j] * pr[j]
-        new_pr[i] = (q / n) + (1 - q) * suma
-    pr = new_pr
+            new_pr[i] += M[i][j] * pr[j]
+    pr = q + (1 - q) * new_pr
+    pr = pr/np.sum(pr)
 
 pr_sorted = sorted([(i+1, pr[i]) for i in range(10)], key=lambda x: x[1], reverse=True)
 for idx, val in pr_sorted:

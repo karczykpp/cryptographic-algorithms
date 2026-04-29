@@ -1,8 +1,8 @@
 import math
 
 def RSA_Algorythm():
-    p = 1249
-    q = 9967
+    p = 45007
+    q = 55001
     n = p*q
     phi = (p-1)*(q-1)
     e = 2
@@ -17,17 +17,36 @@ def RSA_Algorythm():
 
     message = "Nazywam się Jakub Karcz i studuję informatykę na Politechnice Poznańskiej."
     print(f". Wiadomość do zaszyfrowania:")
-    print(f"   '{message}'")
-    encrypted_msg = [pow(ord(char), e, n) for char in message]
 
-    print(f". Wiadomość zaszyfrowana (tablica liczb c):")
-    print(f"   {encrypted_msg}")
+    bloki_tekstu = [message[i:i + 3] for i in range(0, len(message), 3)]
+    print(f"\n1. Pocięty tekst:\n   {bloki_tekstu}")
 
-    decrypted_msg_chars = [chr(pow(char_c, d, n)) for char_c in encrypted_msg]
-    decrypted_msg = "".join(decrypted_msg_chars)
+    zaszyfrowana_wiadomosc = []
 
-    print(f". Wiadomość odszyfrowana:")
-    print(f"   '{decrypted_msg}'")
+    for paczka in bloki_tekstu:
+        m_i = 0
+        for znak in paczka:
+            m_i = (m_i * 1000) + ord(znak)
+        c_i = pow(m_i, e, n)
+        zaszyfrowana_wiadomosc.append(c_i)
+
+    print(f"\n2. Zaszyfrowane bloki (liczby c_i):\n   {zaszyfrowana_wiadomosc}")
+
+    odszyfrowana_wiadomosc = ""
+
+    for c_i in zaszyfrowana_wiadomosc:
+        m_i = pow(c_i, d, n)
+
+        odkodowany_blok = ""
+        while m_i > 0:
+            znak = chr(m_i % 1000)
+            odkodowany_blok = znak + odkodowany_blok
+            m_i = m_i // 1000
+
+        odszyfrowana_wiadomosc += odkodowany_blok
+
+    print(f"\n3. Odszyfrowana wiadomość:\n   '{odszyfrowana_wiadomosc}'")
+
 
 if __name__ == '__main__':
     RSA_Algorythm()
